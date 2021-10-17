@@ -1,5 +1,6 @@
 import os
 import sys
+import enum
 from sqlalchemy import Column, ForeignKey, Integer, String, Enum
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -7,6 +8,10 @@ from sqlalchemy import create_engine
 from eralchemy import render_er
 
 Base = declarative_base()
+
+class MediaEnum(enum.Enum):
+    image = 0
+    video = 1
 
 class User(Base):
     __tablename__ = 'user'
@@ -30,7 +35,7 @@ class Post(Base):
 class Media(Base):
     __tablename__ = 'media'
     id = Column(Integer, primary_key=True)
-    type = Column(Enum)
+    type = Column(Enum(MediaEnum))
     url = Column(String(250))
     post_id = Column(Integer, ForeignKey('post.id'))
 
@@ -40,9 +45,6 @@ class Comment(Base):
     comment_text = Column(String(250))
     author_id = Column(Integer, ForeignKey('user.id'))
     post_id = Column(Integer, ForeignKey('post.id'))
-
-    def to_dict(self):
-        return {}
 
 ## Draw from SQLAlchemy base
 try:
